@@ -1,4 +1,4 @@
-<<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,21 +7,59 @@
     <link rel="stylesheet" href="/src/styles/main.css" />
   </head>
   <body>
-    <main class="container py-5">
-      <section class="card shadow-sm border-0 p-4 p-md-5">
-        <h1 class="h3 mb-4">Admin Panel</h1>
-        <p class="text-secondary mb-3">User and poll management will be implemented here.</p>
-        
-        <!-- Added Admin Information and Guidelines Text -->
-        <hr class="my-4">
-        <div class="admin-guidelines">
-          <h2 class="h5 text-dark mb-3">Administrator Guidelines</h2>
-          <p class="text-muted small mb-2">As an administrator, please adhere to the following operational protocols:</p>
-          <ul class="text-muted small ps-3 mb-0">
-            <li class="mb-1">Verify flag reports before permanently deleting user-generated polls.</li>
-            <li class="mb-1">Ensure that public polls remain free of offensive language or spam.</li>
-            <li>Database changes made through this panel are permanent and cannot be undone.</li>
+    <!-- Simple Header navigation (Same as your main menu) -->
+    <header class="site-header border-bottom mb-4">
+      <nav class="navbar navbar-expand-lg navbar-dark container py-3">
+        <a class="navbar-brand fw-bold" href="/index.html">Poll System</a>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto gap-lg-2">
+            <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/explore-polls.html">Explore Polls</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/admin.html">Admin</a></li>
           </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <div id="admin-message" class="alert d-none" role="alert"></div>
+
+      <!-- Main Admin Card -->
+      <section id="admin-content" class="card shadow-sm border-0 p-4 p-md-5 d-none">
+        <h1 class="h3 mb-4">Admin Dashboard</h1>
+        
+        <div class="row g-4 mb-5">
+          <!-- Quick stats -->
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border">
+              <h5 class="text-secondary small text-uppercase">Total Polls</h5>
+              <p class="display-6 fw-bold mb-0" id="total-polls-count">0</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border">
+              <h5 class="text-secondary small text-uppercase">Active Users</h5>
+              <p class="display-6 fw-bold mb-0" id="total-users-count">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Polls Management Section -->
+        <h2 class="h5 mb-3">Manage Polls</h2>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Title</th>
+                <th>Created By</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-polls-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
         </div>
       </section>
     </main>
