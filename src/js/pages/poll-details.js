@@ -31,14 +31,19 @@ function renderPoll(poll) {
   currentPoll = poll;
 
   const optionsMarkup = (poll.options ?? [])
-    .map(
-      (option) => `
+    .map((option) => {
+      const isUserChoice = poll.userVoteOptionId === option.id;
+
+      return `
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <span>${escapeHtml(option.option_text)}</span>
+          <span class="d-flex align-items-center gap-2">
+            ${escapeHtml(option.option_text)}
+            ${isUserChoice ? '<span class="badge text-bg-warning text-dark">Your answer</span>' : ''}
+          </span>
           <span class="badge text-bg-primary rounded-pill">${option.vote_count ?? 0} votes</span>
         </li>
-      `,
-    )
+      `;
+    })
     .join('');
 
   const imageMarkup = poll.image_url
@@ -47,6 +52,14 @@ function renderPoll(poll) {
 
   const voteMessageMarkup = poll.voteMessage
     ? `<div class="alert alert-info mb-4">${escapeHtml(poll.voteMessage)}</div>`
+    : '';
+
+  const rememberedAnswerMarkup = poll.userVoteText
+    ? `
+      <div class="alert alert-success mb-4">
+        <strong>Your saved answer:</strong> ${escapeHtml(poll.userVoteText)}
+      </div>
+    `
     : '';
 
   const voteFormMarkup = poll.canVote
@@ -84,6 +97,7 @@ function renderPoll(poll) {
       </div>
       <h1 class="h3 mb-3">${escapeHtml(poll.title)}</h1>
       <p class="text-secondary mb-4">${escapeHtml(poll.description)}</p>
+      ${rememberedAnswerMarkup}
       ${voteMessageMarkup}
       ${voteFormMarkup}
       <h2 class="h5 mb-3">Current results</h2>
@@ -117,7 +131,7 @@ async function handleVoteSubmit(event) {
 
   const { data: existingVote, error: existingVoteError } = await supabase
     .from('votes')
-    .select('id')
+    .select('id, option_id, options(option_text)')
     .eq('poll_id', currentPoll.id)
     .eq('user_id', userResult.user.id)
     .maybeSingle();
@@ -128,7 +142,8 @@ async function handleVoteSubmit(event) {
   }
 
   if (existingVote) {
-    showMessage('You already voted in this poll.', 'info');
+    const existingVoteText = existingVote.options?.option_text ?? 'your previous choice';
+    showMessage(`You already voted in this poll. Your answer was: ${existingVoteText}.`, 'info');
     await loadPoll();
     return;
   }
@@ -141,19 +156,6 @@ async function handleVoteSubmit(event) {
 
   if (voteError) {
     showMessage(voteError.message, 'danger');
-    return;
-  }
-
-  const selectedOptionData = currentPoll.options.find((option) => option.id === selectedOption.value);
-  const currentCount = selectedOptionData?.vote_count ?? 0;
-
-  const { error: countError } = await supabase
-    .from('options')
-    .update({ vote_count: currentCount + 1 })
-    .eq('id', selectedOption.value);
-
-  if (countError) {
-    showMessage(countError.message, 'danger');
     return;
   }
 
@@ -175,46 +177,79 @@ async function loadPoll() {
     return;
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabase.rpc('get_poll_details_with_results', {
+    p_poll_id: pollId,
+  });
+
+  if (error) {
+    const fallbackPoll = await loadPollFallback(pollId);
+    if (!fallbackPoll) {
+      showMessage(error.message, 'danger');
+      return;
+    }
+
+    renderPoll(fallbackPoll);
+    return;
+  }
+
+  if (!data) {
+    showMessage('Poll not found or you do not have access to it.', 'warning');
+    return;
+  }
+
+  const hasSavedAnswer = Boolean(data.userVoteOptionId);
+
+  renderPoll({
+    ...data,
+    canVote: !hasSavedAnswer,
+    voteMessage: hasSavedAnswer
+      ? `You already voted in this poll. Your answer was: ${data.userVoteText ?? 'your previous choice'}.`
+      : 'Choose one option below and submit your vote.',
+  });
+}
+
+async function loadPollFallback(pollId) {
+  const { data: pollData, error: pollError } = await supabase
     .from('polls')
     .select('id, title, description, image_url, is_public, created_at, options(id, option_text, vote_count)')
     .eq('id', pollId)
     .single();
 
-  if (error) {
-    showMessage(error.message, 'danger');
-    return;
+  if (pollError || !pollData) {
+    return null;
   }
 
   const { data: userResult } = await supabase.auth.getUser();
   const userId = userResult?.user?.id ?? null;
 
-  let canVote = false;
-  let voteMessage = '';
+  let userVoteOptionId = null;
+  let userVoteText = '';
 
-  if (!userId) {
-    voteMessage = 'Log in to vote on this poll.';
-  } else {
+  if (userId) {
     const { data: existingVote } = await supabase
       .from('votes')
-      .select('id')
-      .eq('poll_id', data.id)
+      .select('option_id, options(option_text)')
+      .eq('poll_id', pollId)
       .eq('user_id', userId)
       .maybeSingle();
 
     if (existingVote) {
-      voteMessage = 'You already voted in this poll.';
-    } else {
-      canVote = true;
-      voteMessage = 'Choose one option below and submit your vote.';
+      userVoteOptionId = existingVote.option_id;
+      userVoteText = existingVote.options?.option_text ?? '';
     }
   }
 
-  renderPoll({
-    ...data,
-    canVote,
-    voteMessage,
-  });
+  return {
+    ...pollData,
+    canVote: Boolean(userId && !userVoteOptionId),
+    voteMessage: userId
+      ? userVoteOptionId
+        ? `You already voted in this poll. Your answer was: ${userVoteText || 'your previous choice'}.`
+        : 'Choose one option below and submit your vote.'
+      : 'Log in to vote on this poll.',
+    userVoteOptionId,
+    userVoteText,
+  };
 }
 
 loadPoll();
