@@ -26,6 +26,48 @@ body {
   box-shadow: 0 0.75rem 2rem rgba(9, 18, 44, 0.15);
 }
 
+.site-header .navbar {
+  gap: 1rem;
+}
+
+.site-header .navbar-brand {
+  letter-spacing: 0.01em;
+}
+
+.home-back-link {
+  display: inline-grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.home-back-link:hover {
+  transform: translateX(-2px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.site-header .nav-link {
+  position: relative;
+  padding-inline: 0.2rem;
+}
+
+.site-header .nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.35rem;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
 .hero,
 .auth-card,
 .hero-panel {
