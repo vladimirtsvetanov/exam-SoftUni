@@ -13,7 +13,9 @@ export default defineConfig({
         createPoll: resolve(__dirname, 'create-poll.html'),
         pollDetails: resolve(__dirname, 'poll-details.html'),
         editPoll: resolve(__dirname, 'edit-poll.html'),
-        admin: resolve(__dirname, 'admin.html')
+        admin: resolve(__dirname, 'admin.html'),
+        // ДОБАВИ ТОЗИ РЕД:
+        explorePolls: resolve(__dirname, 'explore-polls.html') 
       }
     }
   }
