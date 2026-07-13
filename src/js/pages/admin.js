@@ -1,6 +1,8 @@
 // Import your configured Supabase client
 // (Adjust this path to where your actual Supabase configuration is initialized)
-import { supabase } from '../supabase.js'; 
+import '../page-init.js';
+
+import { getSupabaseClient } from '../services/supabase.js'; 
 
 const adminContent = document.getElementById('admin-content');
 const adminMessage = document.getElementById('admin-message');

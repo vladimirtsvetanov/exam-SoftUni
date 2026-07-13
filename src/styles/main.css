@@ -1,3 +1,6 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Your custom styles below */
 :root {
   --site-bg: #f4f7fb;
   --site-surface: #ffffff;
