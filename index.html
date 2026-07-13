@@ -26,26 +26,64 @@
     </header>
 
     <main class="container py-5">
-      <section class="hero card border-0 shadow-sm p-4 p-md-5">
-        <div class="row align-items-center g-4">
+      <section class="hero hero-shell card border-0 shadow-sm overflow-hidden p-4 p-md-5">
+        <div class="hero-glow hero-glow-left"></div>
+        <div class="hero-glow hero-glow-right"></div>
+        <div class="row align-items-center g-5 position-relative">
           <div class="col-lg-7">
-            <span class="badge text-bg-warning mb-3">SoftUni AI Capstone</span>
-            <h1 class="display-5 fw-bold mb-3">Build, share, and vote on polls with Supabase.</h1>
-            <p class="lead text-secondary mb-4">This app will support authentication, poll creation, voting, results, image uploads, and admin tools in a modular vanilla JavaScript architecture.</p>
-            <div class="d-flex flex-wrap gap-2">
-              <a class="btn btn-primary btn-lg" href="/create-poll.html">Create Poll</a>
-              <a class="btn btn-outline-secondary btn-lg" href="/login.html">Get Started</a>
+            <h1 class="display-4 fw-bold mb-3">A modern poll platform for fast decisions and real engagement.</h1>
+            <p class="hero-copy lead text-secondary mb-4">Create public or private polls, collect votes in real time, track results clearly, and manage everything securely with Supabase-backed authentication and storage.</p>
+            <div class="d-flex flex-wrap gap-3 mb-4">
+              <a class="btn btn-primary btn-lg px-4" href="/create-poll.html">Create a Poll</a>
+              <a class="btn btn-outline-secondary btn-lg px-4" href="/login.html">Explore Polls</a>
+            </div>
+            <div class="hero-stats d-flex flex-wrap gap-3">
+              <div class="stat-pill">
+                <span class="stat-value">01</span>
+                <span class="stat-label">Secure vote per user</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-value">24/7</span>
+                <span class="stat-label">Live result tracking</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-value">RLS</span>
+                <span class="stat-label">Protected data access</span>
+              </div>
             </div>
           </div>
           <div class="col-lg-5">
-            <div class="hero-panel p-4 rounded-4">
-              <h2 class="h4 mb-3">What’s included in step 1</h2>
-              <ul class="mb-0 ps-3">
-                <li>Multi-page Vite setup</li>
-                <li>Shared modular folder structure</li>
-                <li>Bootstrap 5 foundation</li>
-                <li>Supabase-ready project skeleton</li>
-              </ul>
+            <div class="hero-panel premium-panel p-4 p-xl-5 rounded-4 shadow-sm">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                  <p class="text-uppercase text-secondary small fw-semibold mb-1">Featured workflow</p>
+                  <h2 class="h4 mb-0">From idea to vote in minutes</h2>
+                </div>
+                <span class="pulse-dot"></span>
+              </div>
+              <div class="workflow-list">
+                <div class="workflow-item">
+                  <span class="workflow-step">1</span>
+                  <div>
+                    <strong>Design the question</strong>
+                    <p class="mb-0 text-secondary">Create a clean poll with multiple options and an optional image.</p>
+                  </div>
+                </div>
+                <div class="workflow-item">
+                  <span class="workflow-step">2</span>
+                  <div>
+                    <strong>Publish and share</strong>
+                    <p class="mb-0 text-secondary">Let users vote once while Supabase keeps the session and data secure.</p>
+                  </div>
+                </div>
+                <div class="workflow-item">
+                  <span class="workflow-step">3</span>
+                  <div>
+                    <strong>Measure the outcome</strong>
+                    <p class="mb-0 text-secondary">See poll results instantly and manage polls from one dashboard.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
