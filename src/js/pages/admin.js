@@ -6,7 +6,7 @@ import { getSupabaseClient } from '../services/supabase.js';
 const supabase = getSupabaseClient();
 
 // 3. Define your authorized admin emails here
-const AUTHORIZED_ADMINS = ['admin@pollsystem.com', 'your-email@example.com']; 
+const AUTHORIZED_ADMINS = ['admin@pollsystem.com', 'vladimircvetanov12@gmail.com']; 
 
 const adminContent = document.getElementById('admin-content');
 const adminMessage = document.getElementById('admin-message');
