@@ -21,12 +21,25 @@
             <textarea class="form-control" id="poll-description" rows="4" required></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="poll-option-1">Option 1</label>
-            <input class="form-control" id="poll-option-1" type="text" required minlength="1" />
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <label class="form-label mb-0">Poll Options</label>
+              <button class="btn btn-outline-primary btn-sm" id="add-option-btn" type="button">Add option</button>
+            </div>
+            <div id="poll-options-list" class="d-grid gap-3">
+              <div class="poll-option-item">
+                <label class="form-label" for="poll-option-1">Option 1</label>
+                <input class="form-control poll-option-input" id="poll-option-1" type="text" required minlength="1" />
+              </div>
+              <div class="poll-option-item">
+                <label class="form-label" for="poll-option-2">Option 2</label>
+                <input class="form-control poll-option-input" id="poll-option-2" type="text" required minlength="1" />
+              </div>
+            </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="poll-option-2">Option 2</label>
-            <input class="form-control" id="poll-option-2" type="text" required minlength="1" />
+            <label class="form-label" for="poll-image">Poll Image</label>
+            <input class="form-control" id="poll-image" type="file" accept="image/*" />
+            <div class="form-text">Optional. Upload a cover image for the poll.</div>
           </div>
           <div class="mb-3 form-check">
             <input class="form-check-input" id="poll-public" type="checkbox" checked />

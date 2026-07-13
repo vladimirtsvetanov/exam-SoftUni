@@ -3,8 +3,22 @@ import '../page-init.js';
 import { getSupabaseClient } from '../services/supabase.js';
 
 const form = document.getElementById('poll-form');
+const addOptionButton = document.getElementById('add-option-btn');
+const optionsList = document.getElementById('poll-options-list');
 const messageBox = document.getElementById('poll-form-message');
 const supabase = getSupabaseClient();
+let optionCounter = 2;
+
+function createOptionField(index) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'poll-option-item';
+  wrapper.innerHTML = `
+    <label class="form-label" for="poll-option-${index}">Option ${index}</label>
+    <input class="form-control poll-option-input" id="poll-option-${index}" type="text" required minlength="1" />
+  `;
+
+  return wrapper;
+}
 
 function showMessage(message, type = 'success') {
   if (!messageBox) {
@@ -16,6 +30,11 @@ function showMessage(message, type = 'success') {
   messageBox.textContent = message;
   messageBox.classList.remove('d-none');
 }
+
+addOptionButton?.addEventListener('click', () => {
+  optionCounter += 1;
+  optionsList?.appendChild(createOptionField(optionCounter));
+});
 
 form?.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -39,9 +58,16 @@ form?.addEventListener('submit', async (event) => {
 
   const title = document.getElementById('poll-title').value.trim();
   const description = document.getElementById('poll-description').value.trim();
-  const option1 = document.getElementById('poll-option-1').value.trim();
-  const option2 = document.getElementById('poll-option-2').value.trim();
   const isPublic = document.getElementById('poll-public').checked;
+  const optionInputs = Array.from(document.querySelectorAll('.poll-option-input'));
+  const optionTexts = optionInputs.map((input) => input.value.trim()).filter(Boolean);
+  const imageInput = document.getElementById('poll-image');
+  const imageFile = imageInput?.files?.[0] ?? null;
+
+  if (optionTexts.length < 2) {
+    showMessage('Please add at least 2 options.', 'warning');
+    return;
+  }
 
   const { data: poll, error: pollError } = await supabase
     .from('polls')
@@ -60,10 +86,10 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
 
-  const optionsPayload = [
-    { poll_id: poll.id, option_text: option1 },
-    { poll_id: poll.id, option_text: option2 },
-  ];
+  const optionsPayload = optionTexts.map((optionText) => ({
+    poll_id: poll.id,
+    option_text: optionText,
+  }));
 
   const { error: optionsError } = await supabase.from('options').insert(optionsPayload);
 
@@ -72,6 +98,31 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
 
+  if (imageFile) {
+    const fileExt = imageFile.name.split('.').pop() || 'jpg';
+    const filePath = `${userResult.user.id}/${poll.id}-${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('poll-images')
+      .upload(filePath, imageFile, {
+        contentType: imageFile.type,
+        upsert: false,
+      });
+
+    if (!uploadError) {
+      const { data: publicUrlData } = supabase.storage.from('poll-images').getPublicUrl(filePath);
+
+      await supabase
+        .from('polls')
+        .update({ image_url: publicUrlData.publicUrl })
+        .eq('id', poll.id);
+    }
+  }
+
   form.reset();
+  optionCounter = 2;
+  optionsList.innerHTML = '';
+  optionsList.appendChild(createOptionField(1));
+  optionsList.appendChild(createOptionField(2));
   showMessage('Poll created successfully.', 'success');
 });
