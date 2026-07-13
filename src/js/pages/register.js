@@ -37,6 +37,5 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
 
-  alert('Account created. Check your email if confirmation is enabled.');
   window.location.href = '/login.html';
 });
