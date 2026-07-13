@@ -1,8 +1,12 @@
-// Import your configured Supabase client
-// (Adjust this path to where your actual Supabase configuration is initialized)
+// 1. IMPORT PAGE INITIALIZATION FIRST to make sure the header always loads!
 import '../page-init.js';
-
 import { getSupabaseClient } from '../services/supabase.js'; 
+
+// 2. Initialize the client instance
+const supabase = getSupabaseClient();
+
+// 3. Define your authorized admin emails here
+const AUTHORIZED_ADMINS = ['admin@pollsystem.com', 'your-email@example.com']; 
 
 const adminContent = document.getElementById('admin-content');
 const adminMessage = document.getElementById('admin-message');
@@ -10,26 +14,44 @@ const pollsTableBody = document.getElementById('admin-polls-table-body');
 const totalPollsCount = document.getElementById('total-polls-count');
 const totalUsersCount = document.getElementById('total-users-count');
 
-// Initialize Admin View
+// Initialize Admin View with strict authorization check
 async function initAdmin() {
-  // 1. Check user authentication
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  // A. Let page-init.js finish rendering the header/layout first 
+  // We wrap our checks in a brief microtask/timeout to allow the DOM header to mount fully.
+  setTimeout(async () => {
+    // Check user authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (authError || !user) {
-    showError('Access denied. Please log in to view the Admin panel.');
-    setTimeout(() => {
-      window.location.href = '/login.html';
-    }, 2000);
-    return;
-  }
+    if (authError || !user) {
+      showError('Access denied. Please log in to view the Admin panel.');
+      setTimeout(() => {
+        window.location.href = '/login.html';
+      }, 2000);
+      return;
+    }
 
-  // OPTIONAL: If you have an admin flag on user metadata or a profiles table:
-  // const isAdmin = user.user_metadata?.role === 'admin';
-  // if (!isAdmin) { ... handle access restriction ... }
+    // Check if the user's email is in the admin list
+    if (!AUTHORIZED_ADMINS.includes(user.email)) {
+      showError('Access denied. You do not have administrator privileges.');
+      
+      // Keep the admin content block hidden
+      if (adminContent) {
+        adminContent.classList.add('d-none'); 
+      }
+      
+      // Redirect them back to the home page after 2.5 seconds
+      setTimeout(() => {
+        window.location.href = '/index.html';
+      }, 2500);
+      return;
+    }
 
-  // 2. Load Dashboard Data
-  adminContent.classList.remove('d-none');
-  await fetchAndRenderPolls();
+    // B. Load Dashboard Data only if they passed both checks
+    if (adminContent) {
+      adminContent.classList.remove('d-none');
+    }
+    await fetchAndRenderPolls();
+  }, 50); // Small 50ms delay to let page-init.js safely inject the header
 }
 
 // Fetch all polls from Supabase
@@ -45,7 +67,7 @@ async function fetchAndRenderPolls() {
     renderPollsTable(polls);
     totalPollsCount.textContent = polls.length;
     
-    // Simulate user count (or fetch unique user profiles if you have a profiles table)
+    // Calculate unique user count based on the creators of the polls
     const uniqueCreators = new Set(polls.map(p => p.user_id));
     totalUsersCount.textContent = uniqueCreators.size;
 
@@ -121,7 +143,7 @@ function showSuccess(message) {
   adminMessage.className = 'alert alert-success';
   adminMessage.textContent = message;
   adminMessage.classList.remove('d-none');
-  setTimeout(() => adminMessage.classList.add('d-none'), 3000);
+  setTimeout(() => adminMessage.className = 'd-none', 3000);
 }
 
 // Helper utility to avoid XSS injections
