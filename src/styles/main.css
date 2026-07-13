@@ -11,6 +11,15 @@ body {
   min-height: 100%;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background:
@@ -72,6 +81,15 @@ body {
 .auth-card,
 .hero-panel {
   background: var(--site-surface);
+}
+
+.card {
+  border-radius: 1.25rem;
+}
+
+.explore-poll-image {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
 }
 
 .hero-shell {
@@ -203,6 +221,14 @@ body {
   max-width: 540px;
 }
 
+.poll-option-item {
+  width: 100%;
+}
+
+.poll-option-input {
+  width: 100%;
+}
+
 .js-enabled .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -223,5 +249,144 @@ body {
 
   100% {
     box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .site-header .navbar {
+    align-items: center;
+  }
+
+  .hero-shell,
+  .hero-panel,
+  .auth-card,
+  .card {
+    border-radius: 1rem;
+  }
+
+  .hero-glow-left {
+    width: 140px;
+    height: 140px;
+    top: -35px;
+    left: -45px;
+  }
+
+  .hero-glow-right {
+    width: 180px;
+    height: 180px;
+    right: -40px;
+    bottom: -70px;
+  }
+
+  .hero-copy,
+  .hero-stats {
+    max-width: 100%;
+  }
+
+  .stat-pill {
+    flex: 1 1 220px;
+  }
+
+  .workflow-item {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .site-header .navbar-nav {
+    padding-top: 0.75rem;
+    gap: 0.25rem !important;
+  }
+
+  .site-header .nav-link {
+    padding: 0.5rem 0;
+  }
+
+  .hero-shell,
+  .hero-panel,
+  .auth-card,
+  .card {
+    padding: 1rem !important;
+  }
+
+  .display-4 {
+    font-size: clamp(2rem, 8vw, 2.75rem);
+    line-height: 1.08;
+  }
+
+  .hero-copy {
+    font-size: 1.02rem;
+  }
+
+  .hero-shell .d-flex.gap-3,
+  .d-flex.flex-wrap.gap-3 {
+    gap: 0.75rem !important;
+  }
+
+  .hero-shell .btn,
+  .explore-polls-page .btn,
+  .poll-details-page .btn,
+  .auth-card .btn,
+  .card .btn {
+    width: 100%;
+  }
+
+  .hero-shell .hero-stats {
+    gap: 0.75rem !important;
+  }
+
+  .stat-pill {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .workflow-item {
+    gap: 0.75rem;
+  }
+
+  .workflow-step {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .explore-poll-image {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  body {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), transparent 40%),
+      linear-gradient(180deg, #f8fbff 0%, #edf3ff 100%);
+  }
+
+  .hero-glow {
+    display: none;
+  }
+
+  .site-header .navbar-brand {
+    font-size: 1.05rem;
+  }
+
+  .hero-shell,
+  .hero-panel,
+  .auth-card,
+  .card {
+    border-radius: 0.9rem;
+  }
+
+  .workflow-list {
+    gap: 0.8rem;
+  }
+
+  .workflow-item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .container.py-5 {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
   }
 }
