@@ -27,6 +27,7 @@ function renderSiteHeader() {
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto gap-lg-2">
           <li class="nav-item"><a class="nav-link" href="/index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/explore-polls.html">Explore Polls</a></li>
           <li class="nav-item"><a class="nav-link" href="/login.html">Login</a></li>
           <li class="nav-item"><a class="nav-link" href="/register.html">Register</a></li>
           <li class="nav-item"><a class="nav-link" href="/create-poll.html">Create Poll</a></li>

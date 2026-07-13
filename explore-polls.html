@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poll System | Explore Polls</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <main class="container py-5">
+      <section class="card shadow-sm border-0 p-4 p-md-5">
+        <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+          <div>
+            <h1 class="h3 mb-2">Explore Polls</h1>
+            <p class="text-secondary mb-0">Browse public polls and your own polls if you are signed in.</p>
+          </div>
+          <a class="btn btn-primary" href="/create-poll.html">Create a Poll</a>
+        </div>
+        <div id="polls-message" class="alert d-none" role="alert"></div>
+        <div id="polls-list" class="row g-4"></div>
+      </section>
+    </main>
+    <script type="module" src="/src/js/pages/explore-polls.js"></script>
+  </body>
+</html>
